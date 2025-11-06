@@ -19,29 +19,21 @@ function fetchHook() {
 }
 
 function parseCafes(raw) {
-  // 情境 A：hook 直接回傳 JSON 陣列
+  // 情境 A：hook 直接回傳 JSON（目前就是這種）
   try {
     const parsed = JSON.parse(raw);
-    if (Array.isArray(parsed)) {
-      return parsed;
-    }
-    if (Array.isArray(parsed.cafes)) {
-      return parsed.cafes;
-    }
+    if (Array.isArray(parsed)) return parsed;
+    if (Array.isArray(parsed.cafes)) return parsed.cafes;
   } catch (e) {
-    // ignore，改用 URL decode 再試
+    // ignore，改用 URL decode 後再試
   }
 
-  // 情境 B：hook 回傳的是 URL encoded 的 JSON 字串
+  // 情境 B：整段 raw 是 URL encoded 的 JSON 字串
   try {
     const decoded = decodeURIComponent(raw);
     const parsed = JSON.parse(decoded);
-    if (Array.isArray(parsed)) {
-      return parsed;
-    }
-    if (Array.isArray(parsed.cafes)) {
-      return parsed.cafes;
-    }
+    if (Array.isArray(parsed)) return parsed;
+    if (Array.isArray(parsed.cafes)) return parsed.cafes;
   } catch (e) {
     // ignore
   }
@@ -49,13 +41,36 @@ function parseCafes(raw) {
   throw new Error("無法從 hook 回應解析出 cafes 陣列");
 }
 
+// 嘗試對字串做 URL decode，解不開就用原值
+function safeDecode(str) {
+  if (typeof str !== "string") return str;
+  // 粗略判斷是不是有 URL encoded pattern
+  if (!/%[0-9A-Fa-f]{2}/.test(str)) return str;
+
+  try {
+    // 有些系統會把空白變成 +，先轉回空白
+    const normalized = str.replace(/\+/g, " ");
+    return decodeURIComponent(normalized);
+  } catch (e) {
+    return str;
+  }
+}
+
 async function main() {
   console.log("Fetching data from hook...");
   const raw = await fetchHook();
   console.log("Raw response length:", raw.length);
 
-  const cafes = parseCafes(raw);
+  let cafes = parseCafes(raw);
   console.log("Parsed cafes length:", cafes.length);
+
+  // 逐欄位做 decode
+  cafes = cafes.map((cafe) => ({
+    ...cafe,
+    name: safeDecode(cafe.name),
+    type: safeDecode(cafe.type),
+    address: safeDecode(cafe.address),
+  }));
 
   const dbRaw = fs.readFileSync(DB_PATH, "utf8");
   const db = JSON.parse(dbRaw);
