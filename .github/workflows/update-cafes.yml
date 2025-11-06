@@ -3,7 +3,7 @@ name: Update cafes from hook
 on:
   workflow_dispatch:    # 手動觸發
   schedule:
-    - cron: "0 18 * * *"  # 可選：每天固定時間跑（UTC）
+    - cron: "0 18 * * 0"  # 可選：每天固定時間跑（UTC）
 
 # 這段是重點：給 GITHUB_TOKEN 寫入 repo 的權限
 permissions:
