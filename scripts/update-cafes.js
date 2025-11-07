@@ -64,12 +64,14 @@ async function main() {
   let cafes = parseCafes(raw);
   console.log("Parsed cafes length:", cafes.length);
 
-  // 逐欄位做 decode
+  // 逐欄位做 decode（包含新增的 gmap_link、photo_link）
   cafes = cafes.map((cafe) => ({
     ...cafe,
     name: safeDecode(cafe.name),
     type: safeDecode(cafe.type),
     address: safeDecode(cafe.address),
+    gmap_link: safeDecode(cafe.gmap_link),
+    photo_link: safeDecode(cafe.photo_link),
   }));
 
   const dbRaw = fs.readFileSync(DB_PATH, "utf8");
