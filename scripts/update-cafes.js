@@ -63,6 +63,9 @@ async function main() {
 
   let cafes = parseCafes(raw);
   console.log("Parsed cafes length:", cafes.length);
+  if (cafes.length > 0) {
+    console.log("Sample cafe from API:", cafes[0]);
+  }
 
   // 逐欄位做 decode（包含新增的 gmap_link、photo_link）
   cafes = cafes.map((cafe) => ({
@@ -76,10 +79,12 @@ async function main() {
 
   const dbRaw = fs.readFileSync(DB_PATH, "utf8");
   const db = JSON.parse(dbRaw);
-
+  console.log("Before update, first cafe in db.json:", db.cafes?.[0]);
+  
   db.cafes = cafes;
 
   fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2), "utf8");
+  console.log("After update, first cafe in db.json:", db.cafes?.[0]);
   console.log("db.json updated successfully.");
 }
 
