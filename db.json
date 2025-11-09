@@ -1,6 +1,13 @@
 {
   "cafes": [
     {
+      "name": "Bonjour Cheby 蹦啾柴比友善餐廳（親子寵物友善）",
+      "type": "狗狗餐廳",
+      "address": "302新竹縣竹北市勝利九街72號",
+      "gmap_link": "https://maps.app.goo.gl/xDyfdwYkPNqxQfG59",
+      "photo_link": "https://lh3.googleusercontent.com/gps-cs-s/AG0ilSyQ6_6CmeIX-8OfuETbcSX0jDhGy0JI65STiHGpgj-e7iledVO82EZtQKMVj_cAkllkZKOP4yAeAhEq73GKfp9zCvSWOp6pz3Dqqu8dxjOHgS8CaG9h7iApAguwrZgC-bAt6vN3=w408-h306-k-no"
+    },
+    {
       "name": "此木咖啡",
       "type": "狗狗餐廳",
       "address": "新北市永和區得和路243巷2號",
